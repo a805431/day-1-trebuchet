@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
 func main() {
@@ -44,10 +46,10 @@ func main() {
 		var singleLineMatches []string
 		singleLineMatches = re.FindAllString(line, -1)
 
-		if len(singleLineMatches) > 1 {
+		if len(singleLineMatches) > 0 {
+			//result += matchWordsWithDigits(searchValues, singleLineMatches)
 			fmt.Println(singleLineMatches)
-		} else if len(singleLineMatches) == 1 {
-			fmt.Println(singleLineMatches)
+			//fmt.Println(matchWordsWithDigits(searchValues, singleLineMatches))
 		} else {
 			linesWithNoMatches = append(linesWithNoMatches, line)
 		}
@@ -58,7 +60,7 @@ func main() {
 }
 
 func buildRegexPattern(valueMap map[string]int) string {
-	var pattern string
+	pattern := "\\d|"
 	counter := 0
 
 	for k := range valueMap {
@@ -71,14 +73,19 @@ func buildRegexPattern(valueMap map[string]int) string {
 	return pattern
 }
 
-//returns the required number for a single line as a string aka "22"
-func matchWordsWithDigits(valueMap map[string]int, words []string) string {
+// returns the required number for a single line as a string aka "22"
+func matchWordsWithDigits(valueMap map[string]int, words []string) int {
 	numberOfWords := len(words)
-	if numberOfWords > 1 {
-		return valueMap[words[0]] valueMap[words[numberOfWords-1]]
-	} else if numberOfWords == 1 {
+	var numberString string
 
+	if numberOfWords > 1 {
+		numberString += strconv.Itoa(valueMap[words[0]]) + strconv.Itoa(valueMap[words[numberOfWords-1]])
+	} else if numberOfWords == 1 {
+		numberString += strings.Repeat(strconv.Itoa(valueMap[words[0]]), 2)
 	} else {
-		return "-1"
+		return -1
 	}
+
+	numberValue, _ := strconv.Atoi(numberString)
+	return numberValue
 }
