@@ -47,9 +47,8 @@ func main() {
 		singleLineMatches = re.FindAllString(line, -1)
 
 		if len(singleLineMatches) > 0 {
-			//result += matchWordsWithDigits(searchValues, singleLineMatches)
 			fmt.Println(singleLineMatches)
-			//fmt.Println(matchWordsWithDigits(searchValues, singleLineMatches))
+			result += getFinalNumberFromLine(searchValues, singleLineMatches)
 		} else {
 			linesWithNoMatches = append(linesWithNoMatches, line)
 		}
@@ -63,8 +62,8 @@ func buildRegexPattern(valueMap map[string]int) string {
 	pattern := "\\d|"
 	counter := 0
 
-	for k := range valueMap {
-		pattern += k
+	for i := range valueMap {
+		pattern += i
 		counter++
 		if counter < len(valueMap) {
 			pattern += "|"
@@ -73,19 +72,34 @@ func buildRegexPattern(valueMap map[string]int) string {
 	return pattern
 }
 
-// returns the required number for a single line as a string aka "22"
-func matchWordsWithDigits(valueMap map[string]int, words []string) int {
-	numberOfWords := len(words)
+// returns the required number for a single line
+func getFinalNumberFromLine(valueMap map[string]int, lineMatches []string) int {
+	numberOfMatches := len(lineMatches)
 	var numberString string
 
-	if numberOfWords > 1 {
-		numberString += strconv.Itoa(valueMap[words[0]]) + strconv.Itoa(valueMap[words[numberOfWords-1]])
-	} else if numberOfWords == 1 {
-		numberString += strings.Repeat(strconv.Itoa(valueMap[words[0]]), 2)
+	if numberOfMatches > 1 {
+		numberString += getMatchStringValue(valueMap, lineMatches[0]) + getMatchStringValue(valueMap, lineMatches[numberOfMatches-1])
+	} else if numberOfMatches == 1 {
+		numberString += strings.Repeat(getMatchStringValue(valueMap, lineMatches[0]), 2)
 	} else {
 		return -1
 	}
 
 	numberValue, _ := strconv.Atoi(numberString)
 	return numberValue
+}
+
+// get the string value for a single match from one line
+func getMatchStringValue(valueMap map[string]int, match string) string {
+	var singleElemStringValue string = ""
+
+	if len(match) > 1 {
+		singleElemStringValue += strconv.Itoa(valueMap[match])
+	} else if len(match) == 1 {
+		singleElemStringValue += match
+	} else {
+		return singleElemStringValue
+	}
+
+	return singleElemStringValue
 }
