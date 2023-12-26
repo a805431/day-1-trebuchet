@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"slices"
 )
 
 func main() {
@@ -22,16 +21,16 @@ func main() {
 	var fileLines []string
 	var linesWithNoMatches []string
 	result := 0
-	searchValues := map[int]string{
-		1: "one",
-		2: "two",
-		3: "three",
-		4: "four",
-		5: "five",
-		6: "six",
-		7: "seven",
-		8: "eight",
-		9: "nine",
+	searchValues := map[string]int{
+		"one":   1,
+		"two":   2,
+		"three": 3,
+		"four":  4,
+		"five":  5,
+		"six":   6,
+		"seven": 7,
+		"eight": 8,
+		"nine":  9,
 	}
 	re := regexp.MustCompile(buildRegexPattern(searchValues))
 
@@ -58,30 +57,28 @@ func main() {
 	//fmt.Println(linesWithNoMatches)
 }
 
-func buildRegexPattern(valueMap map[int]string) string {
+func buildRegexPattern(valueMap map[string]int) string {
 	var pattern string
-	var keys []int
+	counter := 0
+
 	for k := range valueMap {
-		keys = append(keys, k)
-	}
-	slices.Sort(keys)
-	for _, k := range keys {
-		pattern += valueMap[k]
-		if k != keys[len(keys)-1] {
+		pattern += k
+		counter++
+		if counter < len(valueMap) {
 			pattern += "|"
 		}
 	}
 	return pattern
 }
 
-// func matchWordsWithDigits(valueMap map[int]string, words[]string) string {
-// 	numberOfWords := len(words)
-// 	if numberOfWords > 1 {
-// 		words[0] 
-// 		words[numberOfWords - 1]
-// 	} else if numberOfWords == 1 {
+//returns the required number for a single line as a string aka "22"
+func matchWordsWithDigits(valueMap map[string]int, words []string) string {
+	numberOfWords := len(words)
+	if numberOfWords > 1 {
+		return valueMap[words[0]] valueMap[words[numberOfWords-1]]
+	} else if numberOfWords == 1 {
 
-// 	} else {
-// 		return "-1"
-// 	}
-// }
+	} else {
+		return "-1"
+	}
+}
