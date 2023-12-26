@@ -20,6 +20,7 @@ func main() {
 	fileScanner.Split(bufio.ScanLines)
 
 	var fileLines []string
+	var linesWithNoMatches []string
 	result := 0
 	searchValues := map[int]string{
 		1: "one",
@@ -49,11 +50,12 @@ func main() {
 		} else if len(singleLineMatches) == 1 {
 			fmt.Println(singleLineMatches)
 		} else {
-			fmt.Println("No matches found in this line.")
+			linesWithNoMatches = append(linesWithNoMatches, line)
 		}
 	}
 
 	fmt.Println(result)
+	//fmt.Println(linesWithNoMatches)
 }
 
 func buildRegexPattern(valueMap map[int]string) string {
@@ -71,3 +73,15 @@ func buildRegexPattern(valueMap map[int]string) string {
 	}
 	return pattern
 }
+
+// func matchWordsWithDigits(valueMap map[int]string, words[]string) string {
+// 	numberOfWords := len(words)
+// 	if numberOfWords > 1 {
+// 		words[0] 
+// 		words[numberOfWords - 1]
+// 	} else if numberOfWords == 1 {
+
+// 	} else {
+// 		return "-1"
+// 	}
+// }
